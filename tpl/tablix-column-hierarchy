@@ -1,0 +1,7 @@
+<TablixColumnHierarchy>
+  <TablixMembers>
+    {{# fields}}
+        <TablixMember />
+    {{/ fields}}
+  </TablixMembers>
+</TablixColumnHierarchy>

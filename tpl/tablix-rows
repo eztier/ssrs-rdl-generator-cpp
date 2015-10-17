@@ -1,0 +1,51 @@
+<TablixRows>
+  <TablixRow>
+    <Height>0.5in</Height>
+    <TablixCells>
+      {{# fields}}
+      <TablixCell>
+        <CellContents>
+          <Textbox Name="Header{{name}}">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>{{name}}</Value>
+                    <Style>
+                      <TextDecoration>Underline</TextDecoration>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+              </Paragraph>
+            </Paragraphs>
+          </Textbox>
+        </CellContents>
+      </TablixCell>
+      {{/ fields}}
+    </TablixCells>
+  </TablixRow>
+  <TablixRow>
+    <Height>0.5in</Height>
+    <TablixCells>
+      <TablixCell>
+        <CellContents>
+          <Textbox Name="{{name}}">
+            <HideDuplicates>DataSet1</HideDuplicates>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!{{name}}.Value</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+              </Paragraph>
+            </Paragraphs>
+          </Textbox>
+        </CellContents>
+      </TablixCell>
+    </TablixCells>
+  </TablixRow>
+</TablixRows>

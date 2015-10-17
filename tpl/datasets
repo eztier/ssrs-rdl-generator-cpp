@@ -1,0 +1,16 @@
+<DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>{{command}}</CommandText>
+        <Timeout>30</Timeout>
+      </Query>
+      <Fields>
+        {{# fields}}
+        <Field Name="{{name}}">
+          <DataField>{{name}}</DataField>
+        </Field>
+        {{/ fields}}        
+      </Fields>
+    </DataSet>
+  </DataSets>

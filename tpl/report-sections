@@ -1,0 +1,19 @@
+<ReportSections>
+  <ReportSection>
+    <Width>6in</Width>
+    <Page />
+    <Body>
+      <Height>1.5in</Height>
+      <ReportItems>
+        <Tablix>
+          <TablixBody>
+            {{tablixColumns}}
+            {{tablixRows}}
+            {{tablixColumnHierarchy}}
+            {{tablixRowHierarchy}}            
+          </TablixBody>
+        </Tablix>
+      </ReportItems>
+    </Body>
+  </ReportSection>
+</ReportSections>
