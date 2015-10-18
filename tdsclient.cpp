@@ -1,4 +1,4 @@
-#include "tdsclient.hpp"
+#include "TDSClient.hpp"
 #include "spdlog/spdlog.h"
 
 /*
@@ -48,14 +48,21 @@ int msg_handler(DBPROCESS* dbproc, DBINT msgno, int msgstate, int severity, char
   return(0);
 }
 
-TDSClient::~TDSClient() {
+tds::TDSClient::~TDSClient() {
 
 }
 
-int TDSClient::connect(string& _host, string& _user, string& _pass){
+int tds::TDSClient::connect(string& _host, string& _user, string& _pass){
   host = _host;
   user = _user;
   pass = _pass;
+  return connect();
+};
+
+//windows nt
+int tds::TDSClient::connect(string& _host, string& _user){
+  host = _host;
+  user = _user;
   return connect();
 };
 
@@ -63,8 +70,8 @@ int TDSClient::connect(string& _host, string& _user, string& _pass){
 do not call dbinit multiple times!
 http://codeverge.com/sybase.ase.unix/memory-leak-in-libsybdb.so-2/966326
 */
-int TDSClient::init() {
-
+int tds::TDSClient::init() {
+  
   if (dbinit() == FAIL) {
     spdlog::get("logger")->error() << "dbinit() failed";
     return 1;
@@ -75,7 +82,7 @@ int TDSClient::init() {
   return 0;
 };
 
-int TDSClient::connect() {
+int tds::TDSClient::connect() {
 
   int rc = this->init();
 
@@ -93,9 +100,20 @@ int TDSClient::connect() {
     return 1;
   }
 
-  DBSETLUSER(login, user.c_str());
-  DBSETLPWD(login, pass.c_str());
-  DBSETLAPP(login, "banana");
+  if (pass.size() > 0){
+    DBSETLUSER(login, user.c_str());
+  }
+  else {
+    DBSETLUSER(login, "");
+  }
+  if (pass.size() > 0){
+    //non windows nt
+    DBSETLPWD(login, pass.c_str());
+  }
+  else {
+    DBSETLPWD(login, "");
+  }
+  DBSETLAPP(login, "ssrs-rdl-generator");
 
   this->dbproc = dbopen(login, host.c_str());
 
@@ -111,7 +129,7 @@ int TDSClient::connect() {
 
 };
 
-int TDSClient::useDatabase(string& db){
+int tds::TDSClient::useDatabase(string& db){
   if ((erc = dbuse(dbproc, db.c_str())) == FAIL) {
     spdlog::get("logger")->error() << "useDatabase() unable to use database " << db;
 
@@ -122,12 +140,12 @@ int TDSClient::useDatabase(string& db){
   return 0;
 };
 
-void TDSClient::sql(string& _script){
+void tds::TDSClient::sql(string& _script){
   script = _script;
   dbcmd(dbproc, script.c_str());
 };
 
-int TDSClient::getMetadata() {
+int tds::TDSClient::getMetadata() {
 
   ncols = dbnumcols(dbproc);
   
@@ -181,7 +199,7 @@ int TDSClient::getMetadata() {
   return 0;
 };
 
-int TDSClient::fetchData() {
+int tds::TDSClient::fetchData() {
 
   while ((row_code = dbnextrow(dbproc)) != NO_MORE_ROWS){
 
@@ -223,7 +241,7 @@ int TDSClient::fetchData() {
   return 0;
 };
 
-int TDSClient::execute() {
+int tds::TDSClient::execute() {
 
   auto status = dbsqlexec(dbproc);
 
@@ -256,7 +274,7 @@ int TDSClient::execute() {
 
 };
 
-void TDSClient::close() {
+void tds::TDSClient::close() {
   if (this->dbproc != NULL){
     dbclose(dbproc);
     this->dbproc = NULL;

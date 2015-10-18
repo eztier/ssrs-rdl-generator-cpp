@@ -2,6 +2,7 @@
 #define ALLENTOWN_HPP
 
 #include <iostream>
+#include "tdsclient.hpp"
 #include "plustache/template.hpp"
 #include "plustache/plustache_types.hpp"
 #include "plustache/context.hpp"
@@ -49,15 +50,15 @@ namespace ssrs {
     };
 
     template<typename xmlelement>
-    class generator : public base<xmlelement>{};
+    class generator_impl : public base<xmlelement>{};
 
     /*
     DataSources
     */
     template<>
-    class generator<XmlElement::Root> : public base<XmlElement::Root>{
+    class generator_impl<XmlElement::Root> : public base<XmlElement::Root>{
     public:
-      generator(){ tpl = "tpl/root"; }
+      generator_impl(){ tpl = "tpl/root"; }
 
     };
 
@@ -65,9 +66,9 @@ namespace ssrs {
       DataSources
     */
     template<>
-    class generator<XmlElement::DataSources> : public base<XmlElement::DataSources>{
+    class generator_impl<XmlElement::DataSources> : public base<XmlElement::DataSources>{
     public:
-      generator(){ tpl = "tpl/datasources"; }
+      generator_impl(){ tpl = "tpl/datasources"; }
 
     };
 
@@ -75,9 +76,9 @@ namespace ssrs {
       DataSets
     */
     template<>
-    class generator<XmlElement::DataSets> : public base<XmlElement::DataSets>{
+    class generator_impl<XmlElement::DataSets> : public base<XmlElement::DataSets>{
     public:
-      generator(){ tpl = "tpl/datasets"; }
+      generator_impl(){ tpl = "tpl/datasets"; }
 
     };
 
@@ -85,9 +86,9 @@ namespace ssrs {
       ReportSections
     */
     template<>
-    class generator<XmlElement::ReportSections> : public base<XmlElement::ReportSections>{
+    class generator_impl<XmlElement::ReportSections> : public base<XmlElement::ReportSections>{
     public:
-      generator(){ tpl = "tpl/report-sections"; }
+      generator_impl(){ tpl = "tpl/report-sections"; }
 
     };
 
@@ -95,9 +96,9 @@ namespace ssrs {
       TablixColumns
     */
     template<>
-    class generator<XmlElement::TablixColumns> : public base<XmlElement::TablixColumns>{
+    class generator_impl<XmlElement::TablixColumns> : public base<XmlElement::TablixColumns>{
     public:
-      generator(){ tpl = "tpl/tablix-columns"; }
+      generator_impl(){ tpl = "tpl/tablix-columns"; }
 
     };
 
@@ -105,9 +106,9 @@ namespace ssrs {
       TablixRows
     */
     template<>
-    class generator<XmlElement::TablixRows> : public base<XmlElement::TablixRows>{
+    class generator_impl<XmlElement::TablixRows> : public base<XmlElement::TablixRows>{
     public:
-      generator(){ tpl = "tpl/tablix-rows"; }
+      generator_impl(){ tpl = "tpl/tablix-rows"; }
 
     };
 
@@ -115,9 +116,9 @@ namespace ssrs {
       TablixColumnHierarchy
     */
     template<>
-    class generator<XmlElement::TablixColumnHierarchy> : public base<XmlElement::TablixColumnHierarchy>{
+    class generator_impl<XmlElement::TablixColumnHierarchy> : public base<XmlElement::TablixColumnHierarchy>{
     public:
-      generator(){ tpl = "tpl/tablix-column-hierarchy"; }
+      generator_impl(){ tpl = "tpl/tablix-column-hierarchy"; }
 
     };
 
@@ -125,10 +126,53 @@ namespace ssrs {
       TablixRowHierarchy
     */
     template<>
-    class generator<XmlElement::TablixRowHierarchy> : public base<XmlElement::TablixRowHierarchy>{
+    class generator_impl<XmlElement::TablixRowHierarchy> : public base<XmlElement::TablixRowHierarchy>{
     public:
-      generator(){ tpl = "tpl/tablix-row-hierarchy"; }
+      generator_impl(){ tpl = "tpl/tablix-row-hierarchy"; }
 
+    };
+
+    class generator {
+       
+    public:
+      generator(std::string _host, std::string _database, std::string _user, std::string _password, std::string _script) : script(_script){}
+      generator(std::string _host, std::string _database, std::string _user, std::string _script) : script(_script){}
+      int run(){
+
+        auto db = unique_ptr<tds::TDSClient>(new tds::TDSClient());
+        int rc;
+        if (this->password.size() > 0){
+          rc = db->connect(this->host, this->user, this->password);
+        }
+        else {
+          //windows nt
+          rc = db->connect(this->host, this->user);
+        }
+        if (rc)
+          return rc;
+
+        rc = db->useDatabase(this->database);
+        if (rc)
+          return rc;
+
+        db->sql(script);
+
+        rc = db->execute();
+
+        spdlog::get("logger")->info() << "ssrs::rdl::generator::run() sent => " << script;
+
+        if (rc)
+          return rc;
+
+        return 0;
+
+      }
+    private:
+      std::string script;
+      std::string host;
+      std::string database;
+      std::string user;
+      std::string password;
     };
 
   }
