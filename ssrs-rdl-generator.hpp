@@ -2,14 +2,17 @@
 #define ALLENTOWN_HPP
 
 #include <iostream>
+#include "plustache/template.hpp"
 #include "plustache/plustache_types.hpp"
+#include "plustache/context.hpp"
 
 namespace ssrs {
   namespace rdl {
 
     const std::string nm("http://schemas.microsoft.com/sqlserver/reporting/2009/01/reportdefinition");
 
-    namespace XmlElement { 
+    namespace XmlElement {
+      class Root;
       class DataSources;  
       class DataSets; 
       class ReportSections; 
@@ -25,10 +28,38 @@ namespace ssrs {
       base(){}
       ~base(){}
       std::string tpl;
+
+      template<class T>
+      int compile(const string tplFile, const T& o){
+
+        //read entire template file 
+        std::ifstream file(tplFile.c_str());
+        std::string tpl((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+        if (tpl.size() == 0){
+          return 1;
+        }
+
+        //compile tempplate with context to create a soap message
+        Plustache::template_t t;
+        xml = t.render(tpl, o);
+
+        return 0;
+      }
     };
 
     template<typename xmlelement>
     class generator : public base<xmlelement>{};
+
+    /*
+    DataSources
+    */
+    template<>
+    class generator<XmlElement::Root> : public base<XmlElement::Root>{
+    public:
+      generator(){ tpl = "tpl/root"; }
+
+    };
 
     /*
       DataSources
