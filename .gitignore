@@ -1,3 +1,5 @@
 ssrs-rdl-generator-cpp.opensdf
 ssrs-rdl-generator-cpp.sdf
 /x64
+/log
+report*

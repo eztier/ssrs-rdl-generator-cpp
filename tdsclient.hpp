@@ -51,7 +51,7 @@ namespace tds{
     int init();
     int connect();
     int connect(string& _host, string& _user, string& _pass);
-    int connect(string& _host, string& _user);
+    int connect(string& _host);
     int useDatabase(string& _db);
     void sql(string& _script);
     int execute();
@@ -61,7 +61,7 @@ namespace tds{
     TDSClient(){};
     unique_ptr<TDSRows> rows;
     TDSClient(string& _host, string& _user, string& _pass) : host(_host), user(_user), pass(_pass) {}
-    TDSClient(string& _host, string& _user) : host(_host), user(_user) {}
+    TDSClient(string& _host) : host(_host) {}
     ~TDSClient();
     DBPROCESS *dbproc = NULL;
   private:

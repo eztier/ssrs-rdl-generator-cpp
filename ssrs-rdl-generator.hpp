@@ -30,22 +30,22 @@ namespace ssrs {
       ~base(){}
       std::string tpl;
 
-      template<class T>
-      int compile(const string tplFile, const T& o){
+      template<typename T>
+      string compile(const shared_ptr<T> o){
 
         //read entire template file 
-        std::ifstream file(tplFile.c_str());
-        std::string tpl((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        std::ifstream file(tpl.c_str());
+        std::string tplx((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
-        if (tpl.size() == 0){
-          return 1;
+        if (tplx.size() == 0){
+          return "";
         }
 
         //compile tempplate with context to create a soap message
         Plustache::template_t t;
-        xml = t.render(tpl, o);
+        std::string result = t.render(tplx, *o);
 
-        return 0;
+        return result;
       }
     };
 
@@ -135,37 +135,95 @@ namespace ssrs {
     class generator {
        
     public:
-      generator(std::string _host, std::string _database, std::string _user, std::string _password, std::string _script) : script(_script){}
-      generator(std::string _host, std::string _database, std::string _user, std::string _script) : script(_script){}
-      int run(){
+      generator(std::string _host, std::string _database, std::string _user, std::string _password, std::string _script) : host(_host), database(_database), user(_user), password(_password), script(_script){}
+      generator(std::string _host, std::string _database, std::string _script) : host(_host), database(_database), script(_script){}
+      
+      shared_ptr<Plustache::Context> generateTemplateContext(){
 
-        auto db = unique_ptr<tds::TDSClient>(new tds::TDSClient());
+        auto ctx = make_shared<Plustache::Context>();
+        PlustacheTypes::CollectionType c;
+
+        //used by datasources template
+        PlustacheTypes::ObjectType cmd, svr, dbs;
+        cmd["command"] = script;
+        svr["host"] = host;
+        dbs["database"] = database;
+        (*ctx).add(cmd);
+        (*ctx).add(svr);
+        (*ctx).add(dbs);
+
+        //replace "select" with "select top 0" 
+        std::regex e("select\\s");
+        script = std::regex_replace(script, e, "select top 0 ");
+
         int rc;
-        if (this->password.size() > 0){
-          rc = db->connect(this->host, this->user, this->password);
-        }
-        else {
-          //windows nt
-          rc = db->connect(this->host, this->user);
-        }
-        if (rc)
-          return rc;
-
-        rc = db->useDatabase(this->database);
-        if (rc)
-          return rc;
-
+        auto db = unique_ptr<tds::TDSClient>(new tds::TDSClient());
+        rc = db->connect(host, user, password);
+        rc = db->useDatabase(database);
         db->sql(script);
-
         rc = db->execute();
 
-        spdlog::get("logger")->info() << "ssrs::rdl::generator::run() sent => " << script;
+        int fieldcount = db->rows->fieldNames->size();
+        for (int i = 0; i < fieldcount; i++){
+          PlustacheTypes::ObjectType o;
+          o["name"] = db->rows->fieldNames->at(i)->value;
+          c.push_back(o);
+        }
 
-        if (rc)
-          return rc;
+        //used by datasets, tablix-column-hierarchy, tablix-columns, tablix-rows
+        ctx->add("fields", c);
 
-        return 0;
+        db.reset();
 
+        return ctx;
+
+      }
+
+      shared_ptr<string> compile(shared_ptr<Plustache::Context> ctx){
+
+        generator_impl<XmlElement::DataSources> datasourcesGen;
+        auto datasourcesTpl = datasourcesGen.compile(ctx);
+        
+        generator_impl<XmlElement::DataSets> datasetsGen;
+        auto datasetsTpl = datasetsGen.compile(ctx);
+
+        generator_impl<XmlElement::TablixColumns> columnsGen;
+        auto columnsTpl = columnsGen.compile(ctx);
+
+        generator_impl<XmlElement::TablixRows> rowsGen;
+        auto rowsTpl = rowsGen.compile(ctx);
+
+        generator_impl<XmlElement::TablixColumnHierarchy> columnHierGen;
+        auto columnHierTpl = columnHierGen.compile(ctx);
+
+        generator_impl<XmlElement::TablixRowHierarchy> rowHierGen;
+        auto rowHierTpl = rowHierGen.compile(ctx);
+
+        /*
+          report sections compile
+        */
+        auto repSecCtx = make_shared<PlustacheTypes::ObjectType>();
+        (*repSecCtx)["tablixColumns"] = columnsTpl;
+        (*repSecCtx)["tablixRows"] = rowsTpl;
+        (*repSecCtx)["tablixColumnHierarchy"] = columnHierTpl;
+        (*repSecCtx)["tablixRowHierarchy"] = rowHierTpl;
+
+        generator_impl<XmlElement::ReportSections> repSecGen;
+        auto repSecTpl = repSecGen.compile(repSecCtx);
+
+        /*
+          root compile
+        */
+        auto rootCtx = make_shared<PlustacheTypes::ObjectType>();
+        (*rootCtx)["dataSources"] = datasourcesTpl;
+        (*rootCtx)["dataSets"] = datasetsTpl;
+        (*rootCtx)["reportSections"] = repSecTpl;
+        generator_impl<XmlElement::Root> rootGen;
+        auto rootTpl = rootGen.compile(rootCtx);
+
+        auto r = make_shared<string>(rootTpl);
+
+        return r;
       }
     private:
       std::string script;

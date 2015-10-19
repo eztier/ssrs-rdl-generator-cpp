@@ -28,6 +28,7 @@
   <TablixRow>
     <Height>0.5in</Height>
     <TablixCells>
+    {{# fields}}
       <TablixCell>
         <CellContents>
           <Textbox Name="{{name}}">
@@ -46,6 +47,7 @@
           </Textbox>
         </CellContents>
       </TablixCell>
+      {{/ fields}}
     </TablixCells>
   </TablixRow>
 </TablixRows>

@@ -60,9 +60,8 @@ int tds::TDSClient::connect(string& _host, string& _user, string& _pass){
 };
 
 //windows nt
-int tds::TDSClient::connect(string& _host, string& _user){
+int tds::TDSClient::connect(string& _host){
   host = _host;
-  user = _user;
   return connect();
 };
 
@@ -114,6 +113,9 @@ int tds::TDSClient::connect() {
     DBSETLPWD(login, "");
   }
   DBSETLAPP(login, "ssrs-rdl-generator");
+
+  //set timeout for login
+  dbsetlogintime(5);
 
   this->dbproc = dbopen(login, host.c_str());
 

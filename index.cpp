@@ -1,35 +1,60 @@
 #include <iostream>
+#include <regex>
+#include <boost/filesystem.hpp>
+#include <fstream>
 #include "ssrs-rdl-generator.hpp"
 
 #ifdef _WIN32
 #pragma comment(lib, "Ws2_32.lib")
 #endif
 
-int runWithBasicAuth(std::string host, std::string user, std::string password, std::string database, std::string script){
-  int rc;
-  //auto db = unique_ptr<tds::TDSClient>(new tds::TDSClient());
-  auto db = tds::TDSClient();
-  rc = db.connect(host, user, password);
-  rc = db.useDatabase(database);
-  db.sql(script);
-  rc = db.execute();
-  return 0;
-}
+auto setupLogging = []()->void {
 
-int runSql(){
-  std::string s = "select current_timestamp";
-  std::string host = "localhost";
-  std::string database = "JwsHRMS_US";
-  std::string username = "joeschmoe";
-  std::string password = "1234";
+  if (boost::filesystem::create_directory("./log")){
+    boost::filesystem::path full_path(boost::filesystem::current_path());
+    std::cout << "Successfully created directory"
+      << full_path
+      << "/log"
+      << "\n";
+  }
 
-  ssrs::rdl::generator g(host, database, username, s);
-  g.run();
+  size_t q_size = 1048576; //queue size must be power of 2
+  spdlog::set_async_mode(q_size);
 
-  //runWithBasicAuth("localhost", "joeschmoe", "1234", "JwsHRMS_US", s);
-  return 0;
+  std::vector<spdlog::sink_ptr> sinks;
+  sinks.push_back(std::make_shared<spdlog::sinks::daily_file_sink_mt>("log/ssrs-rdl-generator", "txt", 0, 0));
+  auto combined_logger = std::make_shared<spdlog::logger>("logger", begin(sinks), end(sinks));
+  combined_logger->set_pattern("[%Y-%d-%m %H:%M:%S:%e] [%l] [thread %t] %v");
+  spdlog::register_logger(combined_logger);
+
+};
+
+namespace test {
+
+  int runSql(){
+    
+    std::string s = "select * from dbo.__fundingaward;";
+    std::string host = "localhost";
+    std::string database = "Grants";
+    std::string username = "joeschmoe";
+    std::string password = "1234";
+
+    //windows authentication, just leave username and password blank
+    ssrs::rdl::generator g(host, database, s);
+    auto ctx = g.generateTemplateContext();
+    auto r = g.compile(ctx);
+
+    ofstream ofs("report1");
+    ofs << *r;
+    ofs.close();
+
+    return 0;
+  }
 }
 
 int main(int argc, char *argv[]) {
-  runSql();
+
+  setupLogging();
+
+  test::runSql();
 }
