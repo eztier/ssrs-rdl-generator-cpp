@@ -140,6 +140,8 @@ namespace ssrs {
       
       shared_ptr<Plustache::Context> generateTemplateContext(){
 
+        std::regex re("^_+");
+
         auto ctx = make_shared<Plustache::Context>();
         PlustacheTypes::CollectionType c;
 
@@ -166,7 +168,8 @@ namespace ssrs {
         int fieldcount = db->rows->fieldNames->size();
         for (int i = 0; i < fieldcount; i++){
           PlustacheTypes::ObjectType o;
-          o["name"] = db->rows->fieldNames->at(i)->value;
+          auto col = std::regex_replace(db->rows->fieldNames->at(i)->value, re, "");
+          o["name"] = col;
           c.push_back(o);
         }
 

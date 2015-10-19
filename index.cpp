@@ -33,18 +33,16 @@ namespace test {
 
   int runSql(){
     
-    std::string s = "select * from dbo.__fundingaward;";
+    std::string s = "select _webrunique_id \"uid\" from dbo.__fundingaward;";
     std::string host = "localhost";
     std::string database = "Grants";
-    std::string username = "joeschmoe";
-    std::string password = "1234";
-
+    
     //windows authentication, just leave username and password blank
     ssrs::rdl::generator g(host, database, s);
     auto ctx = g.generateTemplateContext();
     auto r = g.compile(ctx);
 
-    ofstream ofs("report1");
+    ofstream ofs("report2.rdl");
     ofs << *r;
     ofs.close();
 

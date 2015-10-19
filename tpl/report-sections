@@ -5,13 +5,18 @@
     <Body>
       <Height>1.5in</Height>
       <ReportItems>
-        <Tablix>
+        <Tablix Name="Tablix1">
+          <DataSetName>DataSet1</DataSetName>
+          <Top>0.5in</Top>
+          <Left>0.5in</Left>
+          <Height>0.5in</Height>
+          <Width>3in</Width>
           <TablixBody>
-            {{tablixColumns}}
-            {{tablixRows}}
-            {{tablixColumnHierarchy}}
-            {{tablixRowHierarchy}}            
+            {{{tablixColumns}}}
+            {{{tablixRows}}}
           </TablixBody>
+          {{{tablixColumnHierarchy}}}
+          {{{tablixRowHierarchy}}}
         </Tablix>
       </ReportItems>
     </Body>
