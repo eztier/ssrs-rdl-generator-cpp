@@ -1,5 +1,5 @@
-#ifndef ALLENTOWN_HPP
-#define ALLENTOWN_HPP
+#ifndef SSRS_RDL_GENERATOR_HPP
+#define SSRS_RDL_GENERATOR_HPP
 
 #include <iostream>
 #include "tdsclient.hpp"
