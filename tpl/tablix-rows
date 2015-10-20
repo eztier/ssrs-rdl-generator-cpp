@@ -99,7 +99,7 @@
                 <Style>Solid</Style>
                 <Width>0.5pt</Width>
               </RightBorder>
-              <BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "#fffffff", "f5f5f5")</BackgroundColor>
+              <BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "#fffffff", "#f5f5f5")</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
             </Style>
           </Textbox>
