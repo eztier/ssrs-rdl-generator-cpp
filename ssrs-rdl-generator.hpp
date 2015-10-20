@@ -7,6 +7,15 @@
 #include "plustache/plustache_types.hpp"
 #include "plustache/context.hpp"
 
+/**
+  For Chrome/Safari to work, add the following to "C:\Program Files\Microsoft SQL Server\MSRS10_50.MSSQLSERVER\Reporting Services\ReportManager\js\ReportingServices.js":
+  function pageLoad() {
+    var element = document.getElementById("ctl31_ctl10");
+    if (element) {
+      element.style.overflow = "visible";
+    }
+  }
+**/
 namespace ssrs {
   namespace rdl {
 

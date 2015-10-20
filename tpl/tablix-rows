@@ -1,6 +1,6 @@
 <TablixRows>
   <TablixRow>
-    <Height>0.5in</Height>
+    <Height>0.25in</Height>
     <TablixCells>
       {{# fields}}
       <TablixCell>
@@ -14,11 +14,41 @@
                     <Value>{{name}}</Value>
                     <Style>
                       <TextDecoration>Underline</TextDecoration>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <TopBorder>
+                <Color>DarkGray</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </TopBorder>
+              <BottomBorder>
+                <Color>DarkGray</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </BottomBorder>
+              <LeftBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </LeftBorder>
+              <RightBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </RightBorder>
+              <BackgroundColor>#ddeedd</BackgroundColor>
+            </Style>
           </Textbox>
         </CellContents>
       </TablixCell>
@@ -26,24 +56,52 @@
     </TablixCells>
   </TablixRow>
   <TablixRow>
-    <Height>0.5in</Height>
+    <Height>0.25in</Height>
     <TablixCells>
     {{# fields}}
       <TablixCell>
         <CellContents>
           <Textbox Name="{{name}}">
             <HideDuplicates>DataSet1</HideDuplicates>
+            <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
                     <Value>=Fields!{{name}}.Value</Value>
-                    <Style />
+                    <Style>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>9pt</FontSize>                      
+                    </Style>
                   </TextRun>
                 </TextRuns>
               </Paragraph>
             </Paragraphs>
+            <Style>
+              <TopBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </TopBorder>
+              <BottomBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </BottomBorder>
+              <LeftBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </LeftBorder>
+              <RightBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </RightBorder>
+              <BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "#fffffff", "f5f5f5")</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+            </Style>
           </Textbox>
         </CellContents>
       </TablixCell>
