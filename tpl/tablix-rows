@@ -2,38 +2,34 @@
   <TablixRow>
     <Height>0.25in</Height>
     <TablixCells>
-      {{# fields}}
       <TablixCell>
         <CellContents>
-          <Textbox Name="Header{{name}}">
+          <Textbox Name="Textbox1">
+            <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>{{name}}</Value>
+                    <Value />
                     <Style>
+                      <FontFamily>Segoe UI</FontFamily>                                    
+                      <FontWeight>Bold</FontWeight> 
                       <TextDecoration>Underline</TextDecoration>
-                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
+                <Style />
               </Paragraph>
             </Paragraphs>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
               <TopBorder>
-                <Color>DarkGray</Color>
+                <Color>#dddddd</Color>
                 <Style>Solid</Style>
                 <Width>0.5pt</Width>
               </TopBorder>
               <BottomBorder>
-                <Color>DarkGray</Color>
+                <Color>#dddddd</Color>
                 <Style>Solid</Style>
                 <Width>0.5pt</Width>
               </BottomBorder>
@@ -48,6 +44,60 @@
                 <Width>0.5pt</Width>
               </RightBorder>
               <BackgroundColor>#ddeedd</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </CellContents>
+      </TablixCell>
+    {{# fields}}
+      <TablixCell>
+        <CellContents>
+          <Textbox Name="Header{{name}}">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>{{name}}</Value>
+                    <Style>
+                      <FontFamily>Segoe UI</FontFamily>                                    
+                      <TextDecoration>Underline</TextDecoration>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Style>
+              <TopBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </TopBorder>
+              <BottomBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </BottomBorder>
+              <LeftBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </LeftBorder>
+              <RightBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </RightBorder>
+              <BackgroundColor>#ddeedd</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
         </CellContents>
@@ -56,26 +106,24 @@
     </TablixCells>
   </TablixRow>
   <TablixRow>
-    <Height>0.25in</Height>
+    <Height>0.22in</Height>
     <TablixCells>
-    {{# fields}}
       <TablixCell>
         <CellContents>
-          <Textbox Name="{{name}}">
-            <HideDuplicates>DataSet1</HideDuplicates>
+          <Textbox Name="Textbox2">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Fields!{{name}}.Value</Value>
+                    <Value>=RowNumber(Nothing)</Value>
                     <Style>
-                      <FontFamily>Segoe UI</FontFamily>
-                      <FontSize>9pt</FontSize>                      
+                      <FontFamily>Segoe UI</FontFamily> <FontSize>9pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
+                <Style />
               </Paragraph>
             </Paragraphs>
             <Style>
@@ -101,6 +149,60 @@
               </RightBorder>
               <BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "#fffffff", "#f5f5f5")</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </CellContents>
+      </TablixCell>
+    {{# fields}}
+      <TablixCell>
+        <CellContents>
+          <Textbox Name="{{name}}">
+            <HideDuplicates>DataSet1</HideDuplicates>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>{{value}}</Value>
+                    <Style>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>9pt</FontSize>                      
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Style>
+              <TopBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </TopBorder>
+              <BottomBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </BottomBorder>
+              <LeftBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </LeftBorder>
+              <RightBorder>
+                <Color>#dddddd</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </RightBorder>
+              <BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "#fffffff", "#f5f5f5")</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
         </CellContents>

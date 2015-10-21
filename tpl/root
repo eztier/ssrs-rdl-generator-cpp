@@ -1,7 +1,8 @@
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2009/01/reportdefinition">
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   {{{dataSources}}}
   {{{dataSets}}}
-  {{{reportSections}}}
+  {{{reportSections}}}  
 </Report>

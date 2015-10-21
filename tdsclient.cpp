@@ -168,6 +168,11 @@ int tds::TDSClient::getMetadata() {
     pcol->type = dbcoltype(dbproc, c);
     pcol->size = dbcollen(dbproc, c);
 
+    TDSMeta m(pcol->name, pcol->type, pcol->size);
+    auto meta = make_shared<TDSCell<TDSMeta>>(m);
+    rows->fieldMetas->push_back(meta);
+
+    //default to string with max size of 255
     if (SYBCHAR != pcol->type) {
       pcol->size = dbprcollen(dbproc, c);
       if (pcol->size > 255)
@@ -175,7 +180,6 @@ int tds::TDSClient::getMetadata() {
     }
 
     auto col = make_shared<TDSCell<string>>(pcol->name);
-
     rows->fieldNames->push_back(col);
 
     if ((pcol->buffer = (char*)calloc(1, pcol->size + 1)) == NULL){

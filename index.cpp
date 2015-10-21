@@ -33,7 +33,7 @@ namespace test {
 
   int runSql(){
     
-    std::string s = "select oid, _webrunique_id \"uid\" from dbo.__fundingaward;";
+    std::string s = "select fa.oid, _webrunique_id \"uid\", r.name, r.dateModified from dbo.__fundingaward fa inner join dbo._resource r on r.oid = fa.oid;";
     std::string host = "localhost";
     std::string database = "Grants";
     

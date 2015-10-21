@@ -1,19 +1,21 @@
 <TablixRowHierarchy>
   <TablixMembers>
     <TablixMember>
+      <FixedData>true</FixedData>
       <KeepWithGroup>After</KeepWithGroup>
+      <RepeatOnNewPage>true</RepeatOnNewPage>
       <KeepTogether>true</KeepTogether>
     </TablixMember>
     <TablixMember>
-      <DataElementName>Detail_Collection</DataElementName>
-      <DataElementOutput>Output</DataElementOutput>
-      <KeepTogether>true</KeepTogether>
       <Group Name="Table1_Details_Group">
         <DataElementName>Detail</DataElementName>
       </Group>
       <TablixMembers>
         <TablixMember />
       </TablixMembers>
+      <DataElementName>Detail_Collection</DataElementName>
+      <DataElementOutput>Output</DataElementOutput>
+      <KeepTogether>true</KeepTogether>
     </TablixMember>
   </TablixMembers>
 </TablixRowHierarchy>

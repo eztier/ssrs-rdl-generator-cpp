@@ -165,11 +165,35 @@ namespace ssrs {
         db->sql(script);
         rc = db->execute();
 
+        /*
         int fieldcount = db->rows->fieldNames->size();
         for (int i = 0; i < fieldcount; i++){
           PlustacheTypes::ObjectType o;
           auto col = std::regex_replace(db->rows->fieldNames->at(i)->value, re, "");
           o["name"] = col;
+          c.push_back(o);
+        }
+        */
+
+        int fieldcount = db->rows->fieldMetas->size();
+        for (int i = 0; i < fieldcount; i++){
+          PlustacheTypes::ObjectType o;
+          auto col = db->rows->fieldMetas->at(i)->value;
+          auto colname = std::regex_replace(col.name, re, "");
+          o["name"] = colname;
+          o["value"] = "Fields!" + colname + ".Value";
+
+          //determine the column type
+          auto binty = tds::binaryTypes.find(col.type);
+          if (binty != tds::binaryTypes.end()){
+            o["value"] = "Convert.ToBase64String(" + o["value"] + ")";
+          }
+          auto datty = tds::dateTypes.find(col.type);
+          if (datty != tds::dateTypes.end()){
+            o["value"] = "CDate(" + o["value"] + ")";
+          }
+
+          o["value"] = "=" + o["value"];
           c.push_back(o);
         }
 

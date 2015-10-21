@@ -1,4 +1,7 @@
 <TablixColumns>
+  <TablixColumn>
+    <Width>0.48958in</Width>
+  </TablixColumn>
   {{# fields}}
   <TablixColumn>
     <Width>1.5in</Width>

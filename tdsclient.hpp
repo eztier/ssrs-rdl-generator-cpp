@@ -12,6 +12,17 @@ using namespace std;
 
 namespace tds{
 
+  static const std::unordered_map<int, int> binaryTypes = { { SYBIMAGE, 34 }, { SYBTEXT, 35 }, { SYBBINARY, 45 }, { SYBVARBINARY, 37 } };
+  static const std::unordered_map<int, int> dateTypes = { { SYBDATETIME, 61 }, { SYBDATETIME4, 58 }, { SYBDATETIMN, 111 } };
+
+  class TDSMeta {
+  public:
+    std::string name;
+    int type, size;
+    TDSMeta(std::string _name, int _type, int _size) : name(_name), type(_type), size(_size) {}
+    ~TDSMeta(){}
+  };
+
   template<typename T>
   class TDSCell {
   public:
@@ -20,11 +31,13 @@ namespace tds{
     ~TDSCell<T>(){}
   };
 
+  typedef vector<shared_ptr<TDSCell<TDSMeta>>> RowOfMeta;
   typedef vector<shared_ptr<TDSCell<string>>> RowOfString;
   typedef vector<shared_ptr<vector<shared_ptr<TDSCell<string>>>>> TableOfRowsOfString;
 
   class TDSRows {
   public:
+    shared_ptr<RowOfMeta> fieldMetas;
     shared_ptr<RowOfString> fieldNames;
     shared_ptr<TableOfRowsOfString> fieldValues;
     TDSRows() {
@@ -33,6 +46,7 @@ namespace tds{
       */
       fieldNames = make_shared<RowOfString>();
       fieldValues = make_shared<TableOfRowsOfString>();
+      fieldMetas = make_shared<RowOfMeta>();
     }
     ~TDSRows(){
     }

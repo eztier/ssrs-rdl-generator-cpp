@@ -1,5 +1,6 @@
 <TablixColumnHierarchy>
   <TablixMembers>
+    <TablixMember />
     {{# fields}}
         <TablixMember />
     {{/ fields}}
