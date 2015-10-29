@@ -12,7 +12,7 @@ using namespace std;
 
 namespace tds{
 
-  static const std::unordered_map<int, int> binaryTypes = { { SYBIMAGE, 34 }, { SYBTEXT, 35 }, { SYBBINARY, 45 }, { SYBVARBINARY, 37 } };
+  static const std::unordered_map<int, int> binaryTypes = { { SYBIMAGE, 34 }, { SYBTEXT, 35 }, { SYBNTEXT, 99 }, { SYBBINARY, 45 }, { SYBVARBINARY, 37 } };
   static const std::unordered_map<int, int> dateTypes = { { SYBDATETIME, 61 }, { SYBDATETIME4, 58 }, { SYBDATETIMN, 111 } };
 
   class TDSMeta {
