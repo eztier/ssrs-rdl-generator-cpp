@@ -53,7 +53,7 @@ namespace ssrs {
     class generator_impl : public base<xmlelement>{};
 
     /*
-    DataSources
+      Root
     */
     template<>
     class generator_impl<XmlElement::Root> : public base<XmlElement::Root>{
