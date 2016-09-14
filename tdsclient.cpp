@@ -8,20 +8,13 @@ ref: http://lists.ibiblio.org/pipermail/freetds/2004q3/016451.html
 int err_handler(DBPROCESS* dbproc, int severity, int dberr, int oserr, char* dberrstr, char* oserrstr) {
   if ((dbproc == NULL) || (DBDEAD(dbproc))) {
     spdlog::get("logger")->error() << "dbproc is NULL error: " << dberrstr;
-    dbexit();
     return(INT_CANCEL);
-  }
-  else
-  {
+  } else {
     spdlog::get("logger")->error() << "DB-Library error: " << dberrstr;
 
     if (oserr != DBNOERR){
       spdlog::get("logger")->error() << "Operating-system error: " << oserrstr;
     }
-
-    dbclose(dbproc);
-    dbexit();
-
     return(INT_CANCEL);
   }
 }
@@ -138,7 +131,7 @@ int tds::TDSClient::useDatabase(string& db){
     this->close();
     return 1;
   }
-  spdlog::get("logger")->error() << "useDatabase() => " << db;
+  spdlog::get("logger")->info() << "useDatabase() => " << db;
   return 0;
 };
 
