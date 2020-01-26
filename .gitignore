@@ -3,3 +3,4 @@ ssrs-rdl-generator-cpp.sdf
 /x64
 /log
 report*
+**/build

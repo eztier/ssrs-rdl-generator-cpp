@@ -2,10 +2,9 @@
 #define SSRS_RDL_GENERATOR_HPP
 
 #include <iostream>
+#include <regex>
 #include "tdsclient.hpp"
-#include "plustache/template.hpp"
-#include "plustache/plustache_types.hpp"
-#include "plustache/context.hpp"
+#include "plustache.hxx"
 
 namespace ssrs {
   namespace rdl {
