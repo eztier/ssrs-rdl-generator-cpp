@@ -26,70 +26,22 @@ typedef std::vector<ObjectType> CollectionType;
 #define PLUSTACHE_CONTEXT_H
 
 #include <iostream>
-// #include <mutex>
-#include "spinLock.h"
+
 
 namespace Plustache {
-  // std::mutex mtx;
-  durian::Spinlock _lock;
-	class Context {    
+	class Context {
 	public:
 	    Context ();
 	    ~Context ();
-      
 	    int add(const std::string& key, const std::string& value);
-      int addSafe(const std::string& key, const std::string& value) {
-        //std::lock_guard<std::mutex> lock(mtx);
-        _lock.lock();
-        PlustacheTypes::ObjectType obj;
-        obj[key] = value;
-        ctx[key].push_back(obj);
-        _lock.unlock();
-        return 0;
-      }
 	    int add(const std::string& key, PlustacheTypes::CollectionType& c);
 	    int add(const std::string& key, const PlustacheTypes::ObjectType& o);
 	    int add(const PlustacheTypes::ObjectType& o);
 	    PlustacheTypes::CollectionType get(const std::string& key) const;
-      PlustacheTypes::CollectionType getSafe(const std::string& key) const {
-        //std::lock_guard<std::mutex> lock(mtx);
-        _lock.lock();
-        PlustacheTypes::CollectionType ret;
-        std::map<std::string, PlustacheTypes::CollectionType> ::const_iterator it;
-        it = ctx.find(key);
-        if (it == ctx.end()) {
-          PlustacheTypes::ObjectType o;
-          o[key] = "";
-          ret.push_back(o);
-        } else {
-          ret = it->second;
-        }
-        _lock.unlock();
-        return ret;
-      }
-      int remove(const std::string& key) { ctx.erase(key); return 0; }
-      void clear(std::unordered_map<string, int>& whitelist) { 
-        vector<string> toDelete;
-        for (auto& e : ctx) { 
-          if (!whitelist[e.first]) {
-            toDelete.emplace_back(e.first);
-          }
-        }
-        for (auto& k : toDelete) { ctx.erase(k); }
-      }
-      string first(const std::string key) { return ctx.find(key) != ctx.end() ? ctx[key].front()[key] : ""; }
-      string last(const std::string key) { return ctx.find(key) != ctx.end() ? ctx[key].back()[key] : ""; }
-
-      auto firstCollection(const std::string key) {
-        return (ctx.find(key) != ctx.end()) ? ctx[key] : PlustacheTypes::CollectionType();
-      }
-      auto fullCtx() {
-        return ctx;
-      }
 
 	private:
 	    /* data */
-	    std::map<std::string, PlustacheTypes::CollectionType> ctx;      
+	    std::map<std::string, PlustacheTypes::CollectionType> ctx;
 	};
 } // namespace Plustache
 #endif
@@ -155,6 +107,7 @@ namespace Plustache {
 
 
 using namespace Plustache;
+
 Context::Context()
 {
 
